@@ -6,13 +6,14 @@ from lxml import html
 _IGNORE_DESCRIPTION_LINES = (
     "Watch this video and more on History Hit",
     "Already subscribed?",
+    "the functionality of our website,",
 )
 EMBED_URL_PATTERN = r'embed_url: "(?P<url>https://embed.vhx.tv/videos/[-a-zA-Z0-9@;:%._\\+~#?&//=]*)"'
 
 
 class HistoryHitIE(InfoExtractor):
     IE_NAME = 'historyhit.com'
-    _VALID_URL = r'https://access.historyhit\.com/videos/(?P<id>[a-zA-Z-]+)'
+    _VALID_URL = r'https://access.historyhit\.com?[a-z0-9\-/]+/videos/(?P<id>[a-zA-Z0-9-]+)'
     _TESTS = [{
         'url': 'https://access.historyhit.com/videos/the-incredible-story-of-william-j-bankes-adventurer-collector-spy',
         'info_dict': {
@@ -44,7 +45,7 @@ class HistoryHitIE(InfoExtractor):
 
         # extract the embed URL
         embed_url = self._search_regex(EMBED_URL_PATTERN, contents, "embed_url")
-        vhx_url = VHXEmbedIE._smuggle_referrer(embed_url, 'https://access.historyhit.com/browse?utm_source=MainNav&utm_medium=COM')
+        vhx_url = VHXEmbedIE._smuggle_referrer(embed_url, 'https://access.historyhit.com')
         vhx_id = self._search_regex(r'embed\.vhx\.tv/videos/(.+?)\?', embed_url, 'vhx_id')
 
         return {
